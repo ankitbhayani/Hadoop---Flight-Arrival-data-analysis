@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ADMS Final Project</title>
+    <!-- include bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <style>
+        body{
+          padding: 15px;
+        }
+
+        .col-md-4{
+          border: 0px solid black;
+          height: 450px;
+        }
+
+        .col-md-12{
+          border: 1px solid lightblue;
+          height: 150px;
+        }
+
+        #studentname{
+          color: black;
+          font-family: verdana;
+          font-size: 90%;
+          padding-left: 400px;
+        }
+
+        .myForm {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            font-size: 0.8em;
+            padding: 1em;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            }
+
+            .myForm * {
+            box-sizing: border-box;
+            }
+
+            .myForm label {
+            padding: 0;
+            font-weight: bold;
+            }
+
+            .myForm input {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            font-size: 0.9em;
+            padding: 0.5em;
+            }
+
+            .myForm input[type="email"],
+            .myForm input[type="password"] {
+            width: 12em;
+            }
+
+            .myForm button {
+            padding: 0.7em;
+            border-radius: 0.5em;
+            background: #eee;
+            border: none;
+            font-weight: bold;
+            }
+
+            .myForm button:hover {
+            background: #ccc;
+            cursor: pointer;
+            }
+
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse">
+  </nav>
+  <div class="jumbotron">
+      <h2>Flight Arrival Data Analysis - INFO7275 Advanced Database Mgt Sys Final Project</h2>
+      <p>Airline on-time performance in United States of America. Make a smart choice while booking your flight.</p>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <a href="https://public.tableau.com/profile/ankit.bhayani#!/vizhome/FlightArrivalAnalysis/CarrierDelayDashBoard">
+        <div class="thumbnail">
+          <img src="1.jpeg" alt="AirlineAnalysis">
+          <div class="caption">
+            <h3>Airline Carrier Delays</h3>
+            <p>Best airlines to avoid delays and its analysis</p>
+          </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <a href="https://public.tableau.com/profile/ankit.bhayani#!/vizhome/Top10JoingPatten/LocationDashBoard">
+        <div class="thumbnail">
+          <img src="2.jpg" alt="AirlineAnalysis">
+          <div class="caption">
+            <h3>Top 25 Busiest Airports</h3>
+            <p>Arrival Delays due to various reason such as security, carrier delays etc</p>
+          </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <a href="https://public.tableau.com/profile/ankit.bhayani#!/vizhome/BestTimeToFlyAnalysis/BestDayWeekMonthtoFly">
+        <div class="thumbnail">
+          <img src="3.jpg" alt="AirlineAnalysis">
+          <div class="caption">
+            <h3>Time Analysis</h3>
+            <p>Best time of day/day of week/time of year to fly to minimize delays.</p>
+          </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <a href="https://public.tableau.com/profile/ankit.bhayani#!/vizhome/CancellationAnalysis/CancellationDashboard">
+        <div class="thumbnail">
+          <img src="4.jpeg" alt="AirlineAnalysis">
+          <div class="caption">
+            <h3>Flight Cancellation Trends</h3>
+            <p>Cancellation counts on reasons, monthly basis and airlines</p>
+          </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="thumbnail">
+           <h5> Real time Cancellation Status:</h5>
+
+          <form class="myForm" method="post" enctype="application/x-www-form-urlencoded" action="/html/codes/html_form_handler.cfm">
+
+            <p>
+              <label>Airline Carrier&nbsp;<input type="text" name="UniqueCarrier" value="AA" required></label>&nbsp;&nbsp;
+              <label>Flight Number&nbsp;<input type="text" name="FlightNum" value="351" required></label>&nbsp;&nbsp;
+              <label>Origin&nbsp;<input type="text" name="Origin" value="Boston" required></label>&nbsp;&nbsp;
+              <label>Destination&nbsp;<input type="text" name="Dest" value="San-Francisco" required></label>&nbsp;&nbsp;
+              <input id="Falsesubmit"type="button" value="Check Status" >
+            </p>
+
+            <div id="predictedValue">Status:</div>
+
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jumbotron">
+      <p id="studentname"> Ankit Bhayani |  NUID : 001632340 |  Graduate Student, Information Systems  |  Northeastern University </p>
+  </div>
+</body>
+<script>
+    $(function() {
+      $(document).on('click', '#Falsesubmit', function() {
+         //alert('ok');
+         $.ajax({
+              url: "https://realtime.machinelearning.us-east-1.amazonaws.com",
+              method: "POST",
+              data: $(".myForm").serialize(),
+              dataType: 'json',
+              contentType: "application/json",
+               success: function(result,status,jqXHR ){
+                   //alert('success');
+                   console.log(result);
+                   $("#predictedValue").html(" <b>Status: </b> Not reachable at this moment..please try again");
+               },
+               error(jqXHR, textStatus, errorThrown){
+                   $("#predictedValue").html(" <b>Status: </b> Not reachable at this moment..please try again");
+               }
+          });
+      });
+    });
+</script>
+</html>
